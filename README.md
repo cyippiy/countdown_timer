@@ -1,6 +1,6 @@
-# Tic Tac Toe in React!
+# Countdown Timer in React!
 
-This project was designed to be a coding challenge. Has 
+This project was designed to be a coding challenge. It receives an input from user and the clock will count down to zero!.
 
 ---
 
