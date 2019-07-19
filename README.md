@@ -1,68 +1,87 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Tic Tac Toe in React!
 
-## Available Scripts
+This project was designed to be a coding challenge. Has 
 
+---
+
+## Getting Started
 In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
 
-### `npm test`
+## Features:
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* Built with React.js Components
+* Counts down from the time indicated to 0
+* Handles multiple input formats
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Design Philisophy
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+I decided break down my components into the multiple child components. The `Timer` Component holds both the `Clock` Component and an Input field. The input allows the user to pass down the time as props to the `Clock`. `Clock` will handle all the parsing of the string data, and `Display` will actually be a presentational component that strictly takes the time as a prop.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Code Samples
 
-### `npm run eject`
+```
+formatTime(str){
+        let values = [];
+        let sum = 0;
+        let currentString = "";
+        //checks if it's formatted with colons or string notation
+        if (str.includes("h") || str.includes("m") || str.includes("s")){
+            currentString = str;
+            if (str.includes("h")){
+                values = currentString.split("h");
+                sum = parseInt(values[0]) * 3600;
+                currentString = values[1];
+            }
+            if (str.includes("m")){
+                values = currentString.split("m");
+                sum = sum + parseInt(values[0]) * 60;
+                currentString = values[1];
+            }
+            if (str.includes("s")){
+                values = currentString.split("s");
+                sum = sum + parseInt(values[0]);
+            }
+        }else if (str.includes(":")){
+            values = str.split(":")
+            console.table(values);
+            for(let i = values.length-1; i >= 0; i--){
+                sum = sum + parseInt(values[i]) * (60 ** (values.length-1-i));
+            }
+        }else if (parseInt(str)){
+            sum = parseInt(str);
+        }
+        this.setState({ time: sum })
+    }
+```
+This method handles the string parsing inside `Clock`. In any case that the string isn't properly parsed on submission, time is reset to zero.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```
+render(){
+        let display = <h2>00:00:00</h2>;
+        if (this.props.time){
+            let time = this.props.time;
+            let hours = Math.floor(time / 3600);
+            time = time % 3600;
+            let minutes = Math.floor(time / 60);
+            let seconds = Math.floor(time % 60);
+            display = <h2>
+                        {hours >= 10 ? hours : `0${hours}`}:
+                        {minutes >= 10 ? minutes : `0${minutes}`}:
+                        {seconds >= 10 ? seconds : `0${seconds}`}
+                        </h2>
+        }
+        return(
+            <div>
+                {display}
+            </div>
+        );
+    }
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+```
+`Display` handles all the integer to string display logic and renders it. No need to have state because it relies on the props of `Clock`.
