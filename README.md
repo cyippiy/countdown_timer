@@ -49,7 +49,6 @@ formatTime(str){
             }
         }else if (str.includes(":")){
             values = str.split(":")
-            console.table(values);
             for(let i = values.length-1; i >= 0; i--){
                 sum = sum + parseInt(values[i]) * (60 ** (values.length-1-i));
             }
